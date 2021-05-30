@@ -194,7 +194,10 @@ int selectionSort(int *a)
 	printArray(a);
 	return 0;
 }
-
+/* insertionSort
+삽입될 새로운 값을 따로 빼놓은 뒤, 정렬을 진행한다. 삽입될 값보다 값이 크다면 오른쪽으로 한 칸 이동하게 되고,
+삽입될 값보다 같거나 작은 값이 나올 때 까지 혹은 맨 왼쪽에 다다를 때 까지 반복한다. 반복을 마치면 값을 삽입한다.
+*/
 int insertionSort(int *a)
 {
 	int i, j, t;
@@ -206,14 +209,14 @@ int insertionSort(int *a)
 
 	for(i = 1; i < MAX_ARRAY_SIZE; i++)
 	{
-		t = a[i];
-		j = i;
+		t = a[i];	//삽입될 값
+		j = i;		//이미 정렬된 부분 스킵
 		while (a[j-1] > t && j > 0)
 		{
-			a[j] = a[j-1];
+			a[j] = a[j-1];	//한 칸 뒤로 이동
 			j--;
 		}
-		a[j] = t;
+		a[j] = t;	//새로운 값을 삽입
 	}
 
 	printf("----------------------------------------------------------------\n");
@@ -251,7 +254,10 @@ int bubbleSort(int *a)
 
 	return 0;
 }
-
+/*shell Sort 
+삽입정렬의 단점을 보완한 정렬이다. 삽입정렬은 한 칸씩 비교를 했다면 shell sort는 MAX_ARRY_SIZE/2 한 만큼의 값만큼 떨어진 곳과 비교를 한다.
+수행될 때 마다 h값을 반으로 감소시키면서 1이 될 때 까지 반복을 한다.
+*/
 int shellSort(int *a)
 {
 	int i, j, k, h, v;
@@ -261,20 +267,20 @@ int shellSort(int *a)
 
 	printArray(a);
 
-	for (h = MAX_ARRAY_SIZE/2; h > 0; h /= 2)
+	for (h = MAX_ARRAY_SIZE/2; h > 0; h /= 2) //h 가 1이 될 때 까지 반복
 	{
 		for (i = 0; i < h; i++)
 		{
-			for(j = i + h; j < MAX_ARRAY_SIZE; j += h)
+			for(j = i + h; j < MAX_ARRAY_SIZE; j += h)	//h만큼의 간격을 가지는 삽입정렬 시행
 			{
-				v = a[j];
+				v = a[j];	//삽입될 값
 				k = j;
-				while (k > h-1 && a[k-h] > v)
+				while (k > h-1 && a[k-h] > v)	//정렬이 필요하다면
 				{
-					a[k] = a[k-h];
+					a[k] = a[k-h];	//값을 h만큼 떨어진 곳 까지 이동
 					k -= h;
 				}
-				a[k] = v;
+				a[k] = v;	//삽입
 			}
 		}
 	}
@@ -283,7 +289,12 @@ int shellSort(int *a)
 
 	return 0;
 }
-
+/*quick Sort
+기준값을 중심으로 왼쪽 부분집합과 오른쪽 부분집합으로 분할하여 정렬 다음 함수에선 마지막원소를 기준으로 퀵정렬을 실행한다.
+왼쪽 부분은 기준값보다 큰 값을 찾을 때 까지, 오른쪽 부분은 기준값보다 작은 값을 찾을 때 까지 이동한 다음, 그 원소들이 왼쪽과 오른쪽 부분에 그대로 있다면
+그 두 원소의 위치를 swap 한다. 왼쪽과 오른쪽 부분이 교차하지 않을 때 까지 반복을 해준 뒤, 기준값을 정렬된 위치로 이동시킨다.
+recursive하게 왼쪽 부분집합과 오른쪽 부분집합에 대해서 각각의 quicksort 를 해주며, 각각의 기준은 각 부분집합의 마지막 원소가 된다.
+*/
 int quickSort(int *a, int n)
 {
 	int v, t;
@@ -291,7 +302,7 @@ int quickSort(int *a, int n)
 
 	if (n > 1)
 	{
-		v = a[n-1];
+		v = a[n-1];	//기준 v, 마지막 원소를 선택한다.
 		i = -1;
 		j = n - 1;
 
@@ -300,17 +311,18 @@ int quickSort(int *a, int n)
 			while(a[++i] < v);
 			while(a[--j] > v);
 
-			if (i >= j) break;
-			t = a[i];
+			if (i >= j) break;	//i 가 j 보다 클 때, break, //큰 값이 왼편에 있다면 swap 한다.
+			t = a[i];		
 			a[i] = a[j];
 			a[j] = t;
 		}
+		//마지막 원소 즉 기준값을 정렬된 위치로 이동시킨다.
 		t = a[i];
 		a[i] = a[n-1];
 		a[n-1] = t;
 
-		quickSort(a, i);
-		quickSort(a+i+1, n-i-1);
+		quickSort(a, i);	//왼쪽 부분집합의 quicksort 진행
+		quickSort(a+i+1, n-i-1);	//오른쪽 부분집합의 ,quicksort
 	}
 
 
